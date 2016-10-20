@@ -49,7 +49,7 @@ gulp.task('compass', function() {
 });
 
 //Default task
-gulp.task('default', ['coffee','js','compass']);
+gulp.task('default', ['coffee','js','compass','watch']);
 
 //Watch task
 gulp.task('watch', function(){
