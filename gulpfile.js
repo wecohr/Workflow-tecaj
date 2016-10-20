@@ -29,12 +29,7 @@ else {
 
 coffeeSources = ['components/coffee/tagline.coffee'];
 
-jsSources = [
-  'componets/scripts/rclick.js',
-  'componets/scripts/pixgrid.js',
-  'componets/scripts/tagline.js',
-  'componets/scripts/template.js'
-];
+jsSources = ['components/scripts/*.js'];
 
 sassSources = ['components/sass/style.scss'];
 
@@ -56,6 +51,7 @@ gulp.task('js', function() {
   .pipe(concat('script.js'))
   .pipe(browserify())
   .pipe(gulpif(env === 'production', uglify()))
+  .pipe(gulpif(env === 'production', gulp.dest('builds/production/js'))) //outputDir za produkciju
   .pipe(gulp.dest('builds/development/js'))
 });
 
@@ -116,6 +112,6 @@ gulp.task('images', function (){
 gulp.task('json', function(){
   gulp.src('builds/development/js/*.json')
   .pipe(gulpif(env === 'production', minifyJSON())) //minify samo za json na production
-  .pipe(gulpif(env === 'production', gulp.dest(outputDir + '/js'))) //outputDir za produkciju u js folder
+  .pipe(gulpif(env === 'production', gulp.dest('builds/production/js'))) //outputDir za produkciju u js folder
   .pipe(connect.reload())
 });
