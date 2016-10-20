@@ -7,6 +7,7 @@ var gulp = require('gulp'),
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
     minifyHTML = require('gulp-minify-html'),
+    minifyJSON = require ('gulp-jsonminify'),
     connect = require('gulp-connect');
 
 
@@ -92,12 +93,14 @@ gulp.task('connect', function(){
 
 gulp.task('html', function(){
   gulp.src('builds/development/*.html')
-  .pipe(gulpif(env === 'production', minifyHTML())) //minify samo za htmk na production
+  .pipe(gulpif(env === 'production', minifyHTML())) //minify samo za html na production
   .pipe(gulpif(env === 'production', gulp.dest(outputDir))) //outputDir za produkciju
   .pipe(connect.reload())
 });
 
 gulp.task('json', function(){
-  gulp.src(outputDir + '/js/*.json')
+  gulp.src('builds/development/js/*.json')
+  .pipe(gulpif(env === 'production', minifyJSON())) //minify samo za json na production
+  .pipe(gulpif(env === 'production', gulp.dest(outputDir + '/js'))) //outputDir za produkciju u js folder
   .pipe(connect.reload())
 });
