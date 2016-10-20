@@ -6,12 +6,13 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
+    minifyHTML = require('gulp-minify-html'),
     connect = require('gulp-connect');
 
 
 var env, coffeeSources, jsSources, sassSources, htmlSources, jsonSources, outputDir,sassStyle;
 
-env = process.env.NODE_ENV || 'development';
+env = process.env.NODE_ENV || 'production';
 
 if (env==='development'){
 outputDir = 'builds/development';
@@ -70,15 +71,15 @@ gulp.task('compass', function() {
 });
 
 //Default task
-gulp.task('default', ['coffee','js','compass','watch','connect','json']);
+gulp.task('default', ['coffee','js','compass','watch','connect','json','html']);
 
 //Watch task
 gulp.task('watch', function(){
   gulp.watch(coffeeSources, ['coffee']);
   gulp.watch(jsSources, ['js']);
   gulp.watch('components/sass/*.scss', ['compass']);
-  gulp.watch(htmlSources, ['html']);
-    gulp.watch(jsonSources, ['json']);
+  gulp.watch('builds/development/*.html', ['html']);
+  gulp.watch(jsonSources, ['json']);
 });
 
 //Gulp connect - paljenje servera
@@ -90,7 +91,9 @@ gulp.task('connect', function(){
 });
 
 gulp.task('html', function(){
-  gulp.src(htmlSources)
+  gulp.src('builds/development/*.html')
+  .pipe(gulpif(env === 'production', minifyHTML())) //minify samo za htmk na production
+  .pipe(gulpif(env === 'production', gulp.dest(outputDir))) //outputDir za produkciju
   .pipe(connect.reload())
 });
 
