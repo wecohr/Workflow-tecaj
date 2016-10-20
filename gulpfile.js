@@ -34,6 +34,8 @@ gulp.task('js', function() {
   .pipe(gulp.dest('builds/development/js'))
 });
 
+
+//Compass - spajanje sass-a u css
 gulp.task('compass', function() {
   gulp.src(sassSources)
   .pipe(compass({
@@ -46,4 +48,13 @@ gulp.task('compass', function() {
   .pipe(gulp.dest('builds/development/css'))
 });
 
+//Default task
 gulp.task('default', ['coffee','js','compass']);
+
+//Watch task
+gulp.task('watch', function(){
+  gulp.watch(coffeeSources, ['coffee']);
+  gulp.watch(jsSources, ['js']);
+  gulp.watch('components/sass/*.scss', ['compass']);
+
+});
