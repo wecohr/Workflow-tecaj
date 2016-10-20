@@ -3,7 +3,8 @@ var gulp = require('gulp'),
     coffee = require('gulp-coffee'),
     browserify = require('gulp-browserify'),
     compass = require('gulp-compass'),
-    concat = require('gulp-concat');
+    concat = require('gulp-concat'),
+    connect = require('gulp-connect');
 
 
 var coffeeSources = ['components/coffee/tagline.coffee'];
@@ -46,10 +47,11 @@ gulp.task('compass', function() {
   }))
   .on('error', gutil.log)
   .pipe(gulp.dest('builds/development/css'))
+  .pipe(connect.reload())
 });
 
 //Default task
-gulp.task('default', ['coffee','js','compass','watch']);
+gulp.task('default', ['coffee','js','compass','watch','connect']);
 
 //Watch task
 gulp.task('watch', function(){
@@ -57,4 +59,12 @@ gulp.task('watch', function(){
   gulp.watch(jsSources, ['js']);
   gulp.watch('components/sass/*.scss', ['compass']);
 
+});
+
+//Gulp connect - paljenje servera
+gulp.task('connect', function(){
+  connect.server({
+      root: 'builds/development/',
+      livereload: true
+});
 });
